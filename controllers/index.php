@@ -24,5 +24,10 @@ class index extends MX_Controller{
         $this->load->view('common/templates/dashboard_lte', $res);
     }
     
-    
+    public function reporte_consolidado() {        
+        $res['view'] = $this->load->view('search_produccion', '', TRUE);
+        $res['slidebar'] = $this->load->view('slidebar', '', TRUE);
+
+        $this->load->view('common/templates/dashboard_lte', $res);
+    }
 }
