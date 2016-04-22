@@ -16,7 +16,12 @@
             <li> <a class="active" href="<?= base_url('produccion/index/') ?>"><i class="glyphicon glyphicon-pencil"></i> Consolidado Mensual</a> </li>
             <li> <a class="active" href="<?= base_url('produccion/index/') ?>"><i class="glyphicon glyphicon-list"></i> Reportes Consolidado</a> </li>
 
-            <br class="clr"/>          
+            <br class="clr"/>    
+            <?php
+            if (!empty($slidebar_actions)) {
+                echo $slidebar_actions;
+            }
+            ?>
     </section>
     <!-- /.sidebar -->
 </aside>

@@ -10,8 +10,8 @@ class Consolidado extends MX_Controller {
         //$this->load->library('grocery_CRUD');
         $this->user->check_session();
         //$this->load->library('fisiatria/paciente_fisiatria');
-        $this->load->library('common/paciente_estadistica');
-        $this->load->library('common/paciente_consulta');
+        /* $this->load->library('common/paciente_estadistica');
+          $this->load->library('common/paciente_consulta'); */
     }
 
     function save_produccion() {
@@ -32,25 +32,14 @@ class Consolidado extends MX_Controller {
         );
 
         $save = $this->generic_model->save($datos, 'produccion');
-
         if ($save) {
             echo tagcontent('script', 'alertaExito("Se ha guardado correctamente los datos")');
-            echo tagcontent('script', "$('form_view').html('<b>Datos ingresados correctamente </b>')");
-            //$this->get_nuevaProd($save);
+            echo tagcontent('script', "window.location.replace('" . base_url('produccion/index/') . "')");
         } else {
             echo warning_msg('No se ha podido la información');
             $this->db->trans_rollback();
             die();
         }
-    }
-
-    public function get_nuevaProd($id_solicitud) {
-        $datos['listcentrocosto'] = $this->generic_model->get('billing_centroscosto');
-        $datos['listbodega'] = $this->generic_model->get('billing_bodega');
-
-        $res['view'] = $this->load->view('view_consolidado', $datos, TRUE);
-        $res['slidebar'] = $this->load->view('slidebar', '', TRUE);
-        $this->load->view('common/templates/dashboard_lte', $res);
     }
 
 //EN ESTA FUNCION VERIFICAMOS EL DOC ID DEL SERVICIO DE LA TABLA HISTORIAL ESTADOS PACIENTE 

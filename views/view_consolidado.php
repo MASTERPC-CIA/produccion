@@ -48,4 +48,6 @@ echo close("form");
 echo close("div");
 echo close("div");
 echo close("div");
+echo tagcontent("div", '', array('id' => 'print', 'name' => 'print'));
+
 ?>
