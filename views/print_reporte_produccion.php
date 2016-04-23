@@ -6,16 +6,23 @@ echo tagcontent('a', '<span class="glyphicon glyphicon-export"></span> Exportar 
 
 /* FIN METODO EXPOR A EXCEL */
 echo Open('div', array('class' => 'col-md-12', 'id' => 'bloque_print', 'style' => 'font-size:16px;font-family:monospace'));
+
 //Cabecera
+function dias_transcurridos($fecha_i, $fecha_f) {
+    $dias = (strtotime($fecha_i) - strtotime($fecha_f)) / 86400;
+    $dias = abs($dias);
+    $dias = floor($dias);
+    return $dias;
+}
 
 for ($i = 0; $i < count($data); $i++) {
-    $grupos_factura[$i] = $data[$i]->id_centro_costo;
+    $grupos_id[$i] = $data[$i]->id_centro_costo;
     $grupos_nombre[$i] = $data[$i]->nombreCentroCosto;
 }
-$lista_centros_costo = array_values(array_unique($grupos_factura));
+$lista_centros_costo = array_values(array_unique($grupos_id));
 $lista_centros_nombre = array_values(array_unique($grupos_nombre));
-//print_r($lista_centros_costo);
 $conta = 0;
+//print_r($data);
 foreach ($lista_centros_costo as $value1) {
 
     echo '<table width="100%" text-align="right" border="0" cellspacing="0" cellpadding="0" style="font-size:7px;">';
@@ -47,196 +54,56 @@ foreach ($lista_centros_costo as $value1) {
     echo Close('thead');
     $conta++;
 
-
     echo Open('thead');
-    foreach ($data as $value) {
+    foreach ($data as $aux) {
         echo Open('tr');
-        if ($value->id_centro_costo == $value1) {
-            echo tagcontent('td id="text_data"', $value->id_piscina);
+        if ($aux->id_centro_costo == $value1) {
+            echo tagcontent('td id="text_data"', $aux->id_piscina); //PISC
+            echo tagcontent('td id="text_data"', $aux->hectareas); //# HAS
+            echo tagcontent('td id="text_data"', $aux->fecha_siembra); //F.DE SIEMBRA
+            $d_cultivo = dias_transcurridos($aux->fecha_siembra, $aux->fecha_pesca);
+            echo tagcontent('td id="text_data"', $d_cultivo); //D.CULTIV
+            echo tagcontent('td id="text_data"', $aux->fecha_pesca); //F.DE PESCA
+            echo tagcontent('td id="text_data"', $aux->a_sembr); //A.SEMBR
+            $densidad = $aux->a_sembr / $aux->hectareas;
+            echo tagcontent('td id="text_data"', number_format($densidad, 3, ',', ' ')); //DENSIDAD
+            echo tagcontent('td id="text_data"', $aux->tipo_siembra); //TIPO/SIEMBRA
+            echo tagcontent('td id="text_data"', ''); //gramos %%%%%%%%%%%%%%
+            $lbs_balanc = $aux->kilos_consumidos * 2.2046;
+            echo tagcontent('td id="text_data"', number_format($lbs_balanc, 3, ',', ' ')); //LBS.BALANC
+            echo tagcontent('td id="text_data"', $aux->kilos_consumidos); //kilos consumidos
+            echo tagcontent('td id="text_data"', $aux->lbs_pescadas); //LBS. PESCADAS
+            $prodXhec = $aux->lbs_pescadas / $aux->hectareas;
+            echo tagcontent('td id="text_data"', number_format($prodXhec, 3, ',', ' ')); //PRODUCC X HAS
+            echo tagcontent('td id="text_data"', $aux->larvas_pescadas); //# LARVAS PESCADAS
+            $sobrev = $aux->larvas_pescadas / $aux->a_sembr;
+            echo tagcontent('td id="text_data"', number_format($sobrev, 3, ',', ' ')); //% SOBREV.
+            $con_ali = $aux->lbs_pescadas / $lbs_balanc;
+            echo tagcontent('td id="text_data"', number_format($con_ali, 3, ',', ' ')); //CONV. ALI-
+            echo tagcontent('td id="text_data"', ''); //$ COSTOS MPD  %%%%%%%%%%%%%%% SUELDO RRHH
+            echo tagcontent('td id="text_data"', $aux->costo_larva); //$ COSTOS LARVA
+            echo tagcontent('td id="text_data"', $aux->costo_mdo_di); //$ COSTO MDO D-I
+            echo tagcontent('td id="text_data"', $aux->arriendo); //$ ARRIEND
+            echo tagcontent('td id="text_data"', ''); //$ COSTO IND %%%%%%%%%%%%%%
+            $total_costo = 0 + $aux->costo_larva + $aux->costo_mdo_di + $aux->arriendo + 0 ;
+            echo tagcontent('td id="text_data"', number_format($total_costo, 3, ',', ' ')); //TOTAL COSTO
+            $costoXhas = $total_costo/$aux->hectareas;
+            echo tagcontent('td id="text_data"', number_format($costoXhas, 3, ',', ' ')); //COST.X.HAS
+            $cost_dia=$costoXhas/$d_cultivo;
+            echo tagcontent('td id="text_data"', number_format($cost_dia, 3, ',', ' '));//COST.DIA
+            echo tagcontent('td id="text_data"', '');//TOTAL VENTA $ %%%%%%%%%%%%%
+            echo tagcontent('td id="text_data"', '');//VTA. XHAS   %%%%%%%%%%%%%
+            echo tagcontent('td id="text_data"', '');//VTA X LBRA  %%%%%%%%%%%%%
+            echo tagcontent('td id="text_data"', '');//VTA X DIA 
+            echo tagcontent('td id="text_data"', '');// UTILIDAD X PISCINA  
+            echo tagcontent('td id="text_data"', '');// UTILI X HAS  
+            echo tagcontent('td id="text_data"', '');//UTILID X DIA 
         }
         echo Close('tr');
     }
 
     echo Close('thead');
 }
-
-
-
-
-
-/*
-  $cont = 1;
-  $actualidad = new DateTime();
-  if (!empty($data)) {
-  //print_r($data);
-  foreach ($data as $val) {
-  echo Open('tr');
-  //GUIA----> echo tagcontent('td id="text_data"', $va->PersonaComercio_cedulaRuc); //28
-
-  echo tagcontent('td id="text_data"', get_settings('COD_UNIDAD_SALUD'));
-  $keywords = preg_split("/[\s-]+/", $val->fecha_registro);
-  //list($año, $mes, $día) = preg_split('-', $fecha_ini);
-  echo tagcontent('td id="text_data"', $keywords[0] . $keywords[1]); //2016-03-04
-  echo tagcontent('td id="text_data"', $cont); //1
-  echo tagcontent('td id="text_data"', $val->PersonaComercio_cedulaRuc); //2
-  echo tagcontent('td id="text_data"', $val->apellidos . ' ' . $val->nombres); //3
-  echo tagcontent('td id="text_data"', $val->representante_legal); //4
-  echo tagcontent('td id="text_data"', $val->sexo); //5
-  echo tagcontent('td id="text_data"', $val->fecha_nacimiento); //6
-  $expEdad = ExpresadaEdad($val->fecha_nacimiento);
-  echo tagcontent('td id="text_data"', $expEdad); //7
-  $edad = CalculaEdad($val->fecha_nacimiento);
-  echo tagcontent('td id="text_data"', $edad); //8
-  $fechaInicial = new DateTime($val->fecha_nacimiento);
-  $interval = $fechaInicial->diff($actualidad);
-  echo tagcontent('td id="text_data"', $interval->format('%y')); //
-  echo tagcontent('td id="text_data"', $interval->format('%m')); //
-  echo tagcontent('td id="text_data"', $interval->format('%d')); //
-  if ($val->nacionalidad_id > 0) {
-  echo tagcontent('td id="text_data"', $val->nacionalidad_id); //9
-  } else {
-  echo tagcontent('td id="text_data"', ''); //9
-  }
-  echo tagcontent('td id="text_data"', ''); //10
-  if ($val->etnia_id > 0) {
-  echo tagcontent('td id="text_data"', $val->etnia_id); //11
-  } else {
-  echo tagcontent('td id="text_data"', ''); //11
-  }
-  if ($val->fuerza_id > 0) {
-  echo tagcontent('td id="text_data"', $val->fuerza_id); //12
-  } else {
-  echo tagcontent('td id="text_data"', ''); //12
-  }
-  if ($val->clientetipo_idclientetipo > 0) {
-  echo tagcontent('td id="text_data"', $val->clientetipo_idclientetipo); //13
-  } else {
-  echo tagcontent('td id="text_data"', ''); //13
-  }
-  if ($val->discapacidad_id > 0) {
-  echo tagcontent('td id="text_data"', $val->discapacidad_id); //14
-  } else {
-  echo tagcontent('td id="text_data"', ''); //14
-  }
-  echo tagcontent('td id="text_data"', $val->provincia); //17
-  echo tagcontent('td id="text_data"', $val->canton); //18
-  echo tagcontent('td id="text_data"', $val->parroquia); //19
-  echo tagcontent('td id="text_data"', $val->direccion); //20
-  echo tagcontent('td id="text_data"', $val->fecha_registro); //21
-  echo tagcontent('td id="text_data"', $val->fecha_egreso); //22
-  $fechaIn = new DateTime($val->fecha_registro);
-  $fechaEg = new DateTime($val->fecha_egreso);
-  $inter = $fechaIn->diff($fechaEg);
-  echo tagcontent('td id="text_data"', $inter->format('%d')); //23
-  echo tagcontent('td id="text_data"', ''); //24-> por agregar
-  echo tagcontent('td id="text_data"', $val->id_cargo . '/' . $val->nombreCargo); //25
-  echo tagcontent('td id="text_data"', $val->si_diag_provisional); //26
-
-
-
-  /* SACA TODOS LOS ULTIMOS DE LA TABLA DE NOTA DE DEVOLUCION----INICIA--->CONS1 */
-/*        $vars = $this->generic_model->get_data('nota_evolucion', array('id_cliente' => $val->id_cliente), 'id', array('id' => 'desc'), 1, null);
-  $keylue = '';
-  foreach ($vars as $keyue) {
-  $keylue = $keyue;
-  }
-  /* FIN CONS1 */
-
-/*       $salida = $this->generic_model->get_data('nota_evo_diagnostico_alta', array('id_nota' => $keylue));
-  $var = count($salida);
-  $not_diag = array_slice($salida, 0, 3);
-  $aux_dos = 0;
-  if (!empty($salida)) {
-  foreach ($not_diag as $key) {
-  $tres = $this->generic_model->get('diagnostico', array('diag_codigo' => $key->cod_cie), 'diag_enfermedad, diag_codigo');
-  foreach ($tres as $aux) {
-  if ($var == 1) {
-  echo tagcontent('td id="text_data"', $aux->diag_enfermedad); //28
-  $aux_dos = 1;
-  continue;
-  }
-  if ($var == 2) {
-  echo tagcontent('td id="text_data"', $aux->diag_enfermedad); //28
-  $aux_dos = 2;
-  continue;
-  }
-  if ($var > 2) {
-  $aux_dos = 3;
-  echo tagcontent('td id="text_data"', $aux->diag_enfermedad); //28
-  continue;
-  }
-  }
-  }
-  } else {
-
-  echo tagcontent('td id="text_data"', ''); //28
-  echo tagcontent('td id="text_data"', ''); //28
-  echo tagcontent('td id="text_data"', ''); //28
-  }
-  if ($aux_dos == 1) {
-  echo tagcontent('td id="text_data"', ''); //28
-  echo tagcontent('td id="text_data"', ''); //28
-  echo tagcontent('td id="text_data"', ''); //28
-  }
-  if ($aux_dos == 2) {
-  echo tagcontent('td id="text_data"', ''); //28
-  echo tagcontent('td id="text_data"', ''); //28
-  }
-  if ($aux_dos == 3) {
-  echo tagcontent('td id="text_data"', ''); //28
-  }
-  if (!empty($not_diag)) {
-  echo tagcontent('td id="text_data"', $not_diag[0]->cod_cie); //31
-  } else {
-  echo tagcontent('td id="text_data"', ''); //31
-  }
-  echo tagcontent('td id="text_data"', ''); //32
-  //Referencia 33
-  if ($val->referencia == 1) {
-  echo tagcontent('td id="text_data"', '1');
-  } else {
-  if ($val->derivacion == 1) {
-  echo tagcontent('td id="text_data"', '2');
-  } else {
-  if ($val->contrareferencia == 1) {
-  echo tagcontent('td id="text_data"', '3');
-  } else {
-  if ($val->ref_inversa == 1) {
-  echo tagcontent('td id="text_data"', '4');
-  } else {
-  echo tagcontent('td id="text_data"', '');
-  }
-  }
-  }
-  }
-  echo tagcontent('td id="text_data"', $val->r_1_servicio_2); //34
-  echo tagcontent('td id="text_data"', $val->r_1_establecimiento_2); //35
-  echo tagcontent('td id="text_data"', $val->r_1_institucion_sis); //36
-
-  $cont++;
-  echo Close('tr');
-  }
-  } else {
-  echo '<h3>No existen datos</h3>';
-  }
-  echo Close('table'); */
-
-$primero = '<span id="texto_inferior">** Según la Constitución Ecuatoriana en el Art. 35 etablece las personas y grupos de atencion prioritaria.<br>';
-$primero.= '* Este campo será llenado obligatoriamente cuando el paciente atendido sea menor de 5 años.</span>';
-$segundo = '<span id="texto_inferior">Según el Art. 21 de la Ley de Estadística que establece: Los datos individuales que se obtengan para efecto de estadística y censos son de carácter reservadoñ en consecuencia, no podran darse a conocer informaciones individuales de ninguna especie, ni podrán ser utilizados para otros fines como de tributación o conscripción, investigaciones judiciales, y en general, para cualquier objeto distinto del propiamente estadístico o censal. Solo se darán a conocer los resúmenes numéricos, las consentraciones globales, las totalizaciones y en general los datos impersonales.</font></span>';
-
-echo '<table width="100%" text-align="right" border="0" cellspacing="0" cellpadding="0" style="font-size:7px;">';
-echo '<tr>';
-echo '<td style="font-size:12px;text-align:left"><b>DISAFA-SISFA Form.504/2015</b></td>';
-echo '</tr>';
-echo '<tr>';
-echo '<td style="font-size:10px;text-align:left"><b> ' . $primero . ' </b></td>';
-echo '</tr>';
-echo '<tr>';
-echo '<td style="font-size:10px;text-align:left"><b> ' . $segundo . ' </b></td>';
-echo '</tr>';
-echo '</table>';
-
 
 echo Close('div');
 echo Close('div');
