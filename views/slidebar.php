@@ -15,6 +15,7 @@
             <li class="header">PRODUCCION</li>
             <li> <a class="active" href="<?= base_url('produccion/index/') ?>"><i class="glyphicon glyphicon-pencil"></i> Consolidado Mensual</a> </li>
             <li> <a class="active" href="<?= base_url('produccion/index/reporte_consolidado') ?>"><i class="glyphicon glyphicon-list"></i> Reportes Consolidado</a> </li>
+            <li> <a class="active" href="<?= base_url('produccion/index/reporte_sector_costo') ?>"><i class="glyphicon glyphicon-list"></i> Reporte Cent.Costo y Piscinas</a> </li>
 
             <br class="clr"/>    
             <?php

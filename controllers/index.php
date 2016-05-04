@@ -30,4 +30,13 @@ class index extends MX_Controller{
 
         $this->load->view('common/templates/dashboard_lte', $res);
     }
+    
+    public function reporte_sector_costo() {   
+        $res['listsectorbodega'] = $this->generic_model->get('bill_sector_bodega');
+        $res['listcentrocosto'] = $this->generic_model->get('billing_centroscosto');
+        $res['view'] = $this->load->view('search_sector_costo', $res, TRUE);
+        $res['slidebar'] = $this->load->view('slidebar', '', TRUE);
+
+        $this->load->view('common/templates/dashboard_lte', $res);
+    }
 }
