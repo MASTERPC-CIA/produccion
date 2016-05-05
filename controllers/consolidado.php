@@ -135,11 +135,11 @@ class Consolidado extends MX_Controller {
             $res['indirectos'] = $indirectos;
 
             if ($centro_costo > 0) {
-                $data_direc = $this->consolidado_model->get_reporte_costo_direc($fecha_in, $fecha_fin, $directos, $centro_costo);
-                $data_indir = $this->consolidado_model->get_reporte_costo_indir($fecha_in, $fecha_fin, $indirectos, $centro_costo);
+                $data_direc = $this->consolidado_model->get_reporte_costo_direc($fecha_in, $fecha_fin, $directos, $centro_costo,$sector);
+                $data_indir = $this->consolidado_model->get_reporte_costo_indir($fecha_in, $fecha_fin, $indirectos, $centro_costo,$sector);
             } else {
-                $data_direc = $this->consolidado_model->get_reporte_direc($fecha_in, $fecha_fin, $directos);
-                $data_indir = $this->consolidado_model->get_reporte_indir($fecha_in, $fecha_fin, $indirectos);
+                $data_direc = $this->consolidado_model->get_reporte_direc($fecha_in, $fecha_fin, $directos, $sector);
+                $data_indir = $this->consolidado_model->get_reporte_indir($fecha_in, $fecha_fin, $indirectos, $sector);
             }
             if (!empty($data_direc) AND ! empty($data_indir)) {
                 $res['data_direc'] = $data_direc;

@@ -36,7 +36,7 @@ echo lineBreak2(2);
 echo Open('table', array('class' => 'table table-striped table-bordered table-hover table-condensed table-responsive', 'id' => "recTable"));
 echo Open('thead');
 echo Open('tr');
-echo tagcontent('th COLSPAN="2"', 'DIRECTOS</p>');
+echo tagcontent('th COLSPAN="2"', 'INDIRECTOS</p>');
 echo Close('tr');
 echo Open('thead');
 for ($i = 0; $i < count($indirectos); $i++) {
