@@ -1,17 +1,20 @@
+<meta http-equiv="content-type" content="application/xhtml+xml; charset=UTF-8" /><!--Exportar con tildes-->
 <?php
-// se tratar de abrir un div en esta vista y cerrarlo en otra no se si haya como 
-echo tagcontent('button', '<span class="glyphicon glyphicon-print"></span> Imprimir', array('id' => 'printbtn', 'data-target' => 'bloque_print', 'class' => 'btn btn-default'));
-/* METODO PARA EXPORTA A EXCEL */
-echo tagcontent('a', '<span class="glyphicon glyphicon-export"></span> Exportar a Excel', array('href' => base_url('produccion/consolidado/export_to_excel_sector_costo/' . $fecha_ini . '/' . $fecha_fin. '/' . $sector. '/' . $centro_costo), 'method' => 'post', 'target' => '_blank', 'class' => 'btn btn-success btn-sm'));
-/* FIN METODO EXPOR A EXCEL */
-echo Open('div', array('class' => 'col-md-12', 'id' => 'bloque_print', 'style' => 'font-size:12px;font-family:monospace'));
+header('Content-Type: application/vnd.ms-excel'); // Para trabajar con los navegadores IE y Opera 
+header('Content-type: application/x-msexcel'); // Para trabajar con el resto de navegadores
+header('Content-Disposition: attachment; filename="reporte_Sector_CentroCosto.xls"');
+header('Cache-Control: max-age=0');
+header('Expires: 0');
+header("Content-Type: charset=utf-8");
 
+echo Open('div', array('id' => 'print_censo_diario', 'class' => 'col-md-12', 'style' => 'padding-left:50px;padding-top:50px;'));
 //Cabecera             
 echo Open('table', array('class' => 'table table-striped table-bordered table-hover table-condensed table-responsive', 'id' => "recTable"));
 echo Open('thead');
 echo Open('tr');
 echo tagcontent('th COLSPAN="2"', 'DIRECTOS');
-echo Close('tr');echo Close('thead');
+echo Close('tr');
+echo Close('thead');
 echo Open('tbody');
 for ($i = 0; $i < count($directos); $i++) {
     echo Open('tr');
@@ -27,14 +30,16 @@ for ($i = 0; $i < count($directos); $i++) {
     echo Close('tr');
 }
 echo Close('tbody');
+echo Close('table');
 
 echo lineBreak2(2);
-             
-echo Open('table', array('class' => 'table table-striped table-bordered table-hover table-condensed table-responsive','style'=>'page-break-before:always !important;','id' => "recTable"));
+
+echo Open('table', array('class' => 'table table-striped table-bordered table-hover table-condensed table-responsive', 'style' => 'page-break-before:always !important;', 'id' => "recTable"));
 echo Open('thead');
 echo Open('tr');
 echo tagcontent('th COLSPAN="2"', 'INDIRECTOS');
-echo Close('tr');echo Close('thead');
+echo Close('tr');
+echo Close('thead');
 echo Open('tbody');
 for ($i = 0; $i < count($indirectos); $i++) {
     echo Open('tr');
@@ -50,6 +55,10 @@ for ($i = 0; $i < count($indirectos); $i++) {
     echo Close('tr');
 }
 echo Close('tbody');
+echo Close('table');
 
 echo Close('div');
-?>
+
+
+
+
